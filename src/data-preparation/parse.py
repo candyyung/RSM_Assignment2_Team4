@@ -8,7 +8,6 @@ outfile = open('../../gen/data-preparation/temp/parsed-data.csv', 'w', encoding 
 
 outfile.write('id\tcreated_at\ttext\n')
 
-#Write new column
 cnt = 0
 for line in con:
     if (len(line)<=5): continue
