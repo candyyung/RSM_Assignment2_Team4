@@ -1,6 +1,6 @@
 import json
 
-f = open('../../gen/data-preparation/temp/fortnite_astronomical_dataset/fortnite_allevent.json','r', encoding='utf-8')
+f = open('../../gen/data-preparation/temp/Fortniteastronomicalevent.json','r', encoding='utf-8')
 
 con = f.readlines()
 
