@@ -3,7 +3,7 @@ import os
 
 print('Downloading raw data... please wait.')
 
-data = requests.get('https://uvt-public.s3.eu-central-1.amazonaws.com/data/rsm2020/team27_fortnite_astronomicalevent.zip')
+data = requests.get('https://uvt-public.s3.eu-central-1.amazonaws.com/data/fortnite_astronomical_dataset.zip')
 
 print('Writing raw data to file')
 
