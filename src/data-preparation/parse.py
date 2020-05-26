@@ -22,6 +22,6 @@ with open('../../gen/data-preparation/temp/parsed-data.csv', 'w', encoding='utf-
 
         g.writerow([id, timestamp, text]) 
 
-        if (cnt>1000): break
+        #if (cnt>1000): break
 
 print('done.')

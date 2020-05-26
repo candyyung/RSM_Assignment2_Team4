@@ -6,11 +6,15 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(data.table)
 library(ggplot2)
+library(dplyr)
+library(data.table)
+library(flipTime)
 
+setwd("~/Public")
 # read final data
-dt <- fread('../../gen/analysis/temp/preclean.csv')
+dt <- read.csv('preclean.csv', stringsAsFactors = FALSE)
+#dt <- fread('../../gen/analysis/temp/preclean.csv')
 ```
 
 ## Some rudimentary analysis in Markdown
@@ -25,18 +29,54 @@ You can also **knit** the document from the command line, see the example in the
 ### Summary statistics
 
 ```{r}
+dt_copy <- dt %>%
+  mutate(datetime = gsub("T", " ", datetime)) %>%
+  mutate(datetime = gsub("Z", "", datetime)) %>%
+  mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
+    strftime("2020-04-23 23:25:00",format = "%Y-%m-%d %H:%M:%S"), "1", "")) %>%
+  mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
+    strftime("2020-04-24 14:25:00",format = "%Y-%m-%d %H:%M:%S") & 
+    strftime(datetime, format = "%Y-%m-%d %H:%M:%S") >= 
+    strftime("2020-04-24 13:20:00",format = "%Y-%m-%d %H:%M:%S"), "2", event)) %>%
+    mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
+    strftime("2020-04-25 04:25:00",format = "%Y-%m-%d %H:%M:%S") & 
+    strftime(datetime, format = "%Y-%m-%d %H:%M:%S") >= 
+    strftime("2020-04-25 03:20:00",format = "%Y-%m-%d %H:%M:%S"), "3", event)) %>%
+    mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
+    strftime("2020-04-25 15:25:00",format = "%Y-%m-%d %H:%M:%S") & 
+    strftime(datetime, format = "%Y-%m-%d %H:%M:%S") >= 
+    strftime("2020-04-25 14:20:00",format = "%Y-%m-%d %H:%M:%S"), "4", event)) %>%
+    mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
+    strftime("2020-04-25 22:30:00",format = "%Y-%m-%d %H:%M:%S") & 
+    strftime(datetime, format = "%Y-%m-%d %H:%M:%S") >= 
+    strftime("2020-04-25 21:20:00",format = "%Y-%m-%d %H:%M:%S"), "5", event)) %>%
+    mutate(event = as.factor(event))
 summary(dt)
+summary(dt_copy)
+length(dt_copy$event)
 ```
+
 
 ### Plots
 
 ```{r}
-hist(dt$polarity)
+dt_tweet <- dt %>%
+  filter(language == "en" & compound != 0)
+hist(dt_tweet$compound)
+#ggplot(dt_tweet, aes(x = language)) +
+  #geom_bar()
+         
+table(dt_tweet$language, useNA = "always")
+```
+
+```{r}
+
+summary(dt_tweet)
 ```
 
 ```{r}
 # Overlaid histograms
-ggplot(dt, aes(x=polarity, color=retweet)) +
+ggplot(dt_tweet, aes(x=compound, color=retweet)) +
   geom_histogram(fill="white", alpha=0.5, position="identity") + ggtitle('Some histogram')
 ```
 
