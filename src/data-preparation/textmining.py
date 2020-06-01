@@ -63,8 +63,9 @@ for i, j in data.iterrows():
         data.loc[i, 'travisscott'] = ''
         data.loc[i, 'fortnite'] = ''
         data.loc[i, 'astronomical'] = ''
-        #data.loc[i, 'polarity'] = ''
-        #data.loc[i, 'subjectivity'] = ''
+        data.loc[i, 'polarity'] = ''
+        data.loc[i, 'subjectivity'] = ''
+        data.loc[i, 'nwords'] = ''
 
 data.head()
 
@@ -76,6 +77,4 @@ print('done.')
 
 
 
-        #textblob = TextBlob(sentence)/textblob.detect_language()
-        #print(analyser.polarity_scores(sentence))
       
