@@ -18,11 +18,22 @@ for i, j in data.iterrows():
         analyser = SentimentIntensityAnalyzer()
         
         data.loc[i, 'language'] = detect(sentence) #detect main language used in the text
+        
+        # polarity score and subjectivity score
+        blob = TextBlob(sentence)
+        polarity_scores = analyser.polarity_scores(blob)
+        data.loc[i, 'polarity'] = blob.sentiment.polarity
+        data.loc[i, 'subjectivity'] = blob.sentiment.subjectivity
+        
+
         data.loc[i, 'neg'] = analyser.polarity_scores(sentence)['neg'] #negative score
         data.loc[i, 'neu'] = analyser.polarity_scores(sentence)['neu'] #neutral score
         data.loc[i, 'pos'] = analyser.polarity_scores(sentence)['pos'] #positive score
         data.loc[i, 'compound'] = analyser.polarity_scores(sentence)['compound'] #overall valence score of the text
        
+        #count the total number of words 
+        data.loc[i, 'nwords'] = len(blob.words)
+        
         #count the number of specific words
         wordcount = 0
         lower = sentence.lower()
@@ -67,5 +78,4 @@ print('done.')
 
         #textblob = TextBlob(sentence)/textblob.detect_language()
         #print(analyser.polarity_scores(sentence))
-        #data.loc[i, 'polarity'] = blob.sentiment.polarity
-        #data.loc[i, 'subjectivity'] = blob.sentiment.subjectivity
+      
