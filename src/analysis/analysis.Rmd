@@ -11,10 +11,10 @@ library(dplyr)
 library(data.table)
 library(flipTime)
 
-setwd("~/Public")
+#setwd("~/Public")
 # read final data
-dt <- read.csv('preclean.csv', stringsAsFactors = FALSE)
-#dt <- fread('../../gen/analysis/temp/preclean.csv')
+#dt <- read.csv('preclean.csv', stringsAsFactors = FALSE)
+dt <- fread('../../gen/analysis/temp/preclean.csv')
 ```
 
 ## Some rudimentary analysis in Markdown
@@ -29,7 +29,7 @@ You can also **knit** the document from the command line, see the example in the
 ### Summary statistics
 
 ```{r}
-dt_copy <- dt %>%
+dt_time <- dt %>%
   mutate(datetime = gsub("T", " ", datetime)) %>%
   mutate(datetime = gsub("Z", "", datetime)) %>%
   mutate(event = if_else(strftime(datetime, format = "%Y-%m-%d %H:%M:%S") <= 
@@ -51,32 +51,54 @@ dt_copy <- dt %>%
     strftime(datetime, format = "%Y-%m-%d %H:%M:%S") >= 
     strftime("2020-04-25 21:20:00",format = "%Y-%m-%d %H:%M:%S"), "5", event)) %>%
     mutate(event = as.factor(event))
+
+```
+
+```{r}
 summary(dt)
-summary(dt_copy)
-length(dt_copy$event)
+```
+
+```{r}
+summary(dt_time)
+```
+
+```{r}
+table(dt_time$event)
 ```
 
 
 ### Plots
 
 ```{r}
-dt_tweet <- dt %>%
+dt_tweet <- dt_time %>%
   filter(language == "en" & compound != 0)
 hist(dt_tweet$compound)
-#ggplot(dt_tweet, aes(x = language)) +
-  #geom_bar()
-         
-table(dt_tweet$language, useNA = "always")
 ```
 
+```{r}         
+table(dt_tweet$language, useNA = "always")
+```
 ```{r}
 
 summary(dt_tweet)
 ```
 
 ```{r}
-# Overlaid histograms
-ggplot(dt_tweet, aes(x=compound, color=retweet)) +
-  geom_histogram(fill="white", alpha=0.5, position="identity") + ggtitle('Some histogram')
+
+ggplot(dt_tweet, aes(x = event)) +
+  geom_bar() + 
+  ggtitle('Count of tweets')
+
+```
+
+
+
+
+```{r}
+# histograms
+ggplot(dt_tweet, aes(x=compound, color=event)) +
+  geom_histogram(fill="lightblue", alpha=0.5) + ggtitle('Count of sentiment score')
+#position="identity"
+
 ```
 
