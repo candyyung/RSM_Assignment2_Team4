@@ -1,5 +1,5 @@
-pip install -U vaderSentiment
-pip install langdetect
+- pip install -U vaderSentiment
+- pip install langdetect
 
 
 
