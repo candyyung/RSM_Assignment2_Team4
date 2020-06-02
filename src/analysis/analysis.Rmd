@@ -17,73 +17,82 @@ library(data.table)
 dt <- fread('../../gen/analysis/temp/preclean.csv')
 ```
 
-## Some rudimentary analysis in Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button in RStudio,a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
-
-You can also **knit** the document from the command line, see the example in the `makefile`.
-
-
 ### Summary statistics
 
 ```{r}
 dt$event <- as.factor(dt$event)
 summary(dt)
 ```
+###Data selection
+
+1. Due to the limitation of the sentiment analysis, only tweets in English are analyzed. 
+2. Retweets are excluded. 
+3. Since the text in this dataset come from Twitter, Valence Aware Dictionary for sEntiment Reasoner (VADER) is used to to classify the sentiments expressed in Twitter data. 
 
 ```{r}
-table(dt$compound, useNA = "always")
-```
+dt_analysis <- dt %>%
+  filter(language == "en") %>%
+  filter(retweet == "FALSE") %>%
+  filter(compound != 0) %>%
+  mutate(sentiment = if_else(compound >= 0.05, "positive", "")) %>%
+  mutate(sentiment = if_else(compound <= -0.05, "negative", sentiment)) %>%
+  mutate(sentiment = if_else(compound > -0.05 & compound < 0.05, "neutral", sentiment)) %>%
+  mutate(sentiment = as.factor(sentiment))
 
+summary(dt_analysis)
+
+```
+```{r}
+dt_valence <- dt_analysis %>%
+  group_by(event, sentiment) %>%
+  summarise(n = n()) %>%
+  mutate(rel.freq = n/sum(n)*100)
+
+dt_valence
+```
 
 ### Plots
 
 ```{r}
-dt_eng <- dt %>%
-  filter(language == "en")
-hist(dt_eng$compound)
+x <- dt_analysis$compound
+h<-hist(x, breaks=20, col="sky blue", xlab="Compound score",
+   main="Histogram for tweets")
+xfit<-seq(min(x),max(x),length=40)
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="red", lwd=2)
+
 ```
+
+
+```{r}  
+dt_summary <- dt_analysis %>%
+  group_by(event) %>%
+  summarise(num_of_tweets = n(), avg_compound = mean(compound), SD = sd(compound),SE = sd(compound)/sqrt(length(compound)), max = max(compound), min = min(compound)) %>%
+  arrange(event)
+dt_summary
+```
+
+
 
 ```{r}
-dt_eng_nonzero <- dt %>%
-  filter(language == "en" & compound != 0)
-hist(dt_eng_nonzero$compound)
-```
-```{r}
-dt_eng <- dt %>%
-  filter(language == "en")
-hist(dt_eng$polarity)
-```
-```{r}
-dt_eng_nonzero_p <- dt %>%
-  filter(language == "en" & polarity != 0)
-hist(dt_eng_nonzero_p$polarity)
-```
-
-```{r}         
-table(dt$language, useNA = "always")
-```
-```{r}
-summary(dt_eng)
-```
-
-```{r}
-
-ggplot(dt_eng, aes(x = event)) +
-  geom_bar() + 
-  ggtitle('Count of tweets')
-
-```
+ggplot(dt_summary, aes(x = event,y = avg_compound)) + 
+  geom_bar(position=position_dodge(), stat="identity", fill="sky blue") +
+  geom_errorbar(aes(ymin=avg_compound-SE, ymax=avg_compound+SE),
+                  width=.2,                    # Width of the error bars
+                  position=position_dodge(.9)) +
+  ggtitle("Average compound score with standard error")
 
 
+
+
+```
 
 
 ```{r}
 # histograms
-ggplot(dt_eng_nonzero, aes(x=compound, color=event)) +
-  geom_histogram(fill="lightblue", alpha=0.5) + ggtitle('Count of sentiment score')
+#ggplot(dt_eng_nonzero, aes(x=compound, color=event)) +
+  #geom_histogram(fill="lightblue", alpha=0.5) + ggtitle('Count of sentiment score')
 #position="identity"
 
 ```
