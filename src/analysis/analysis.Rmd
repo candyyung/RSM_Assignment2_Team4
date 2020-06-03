@@ -6,14 +6,15 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(ggplot2)
-library(dplyr)
-library(data.table)
-#library(flipTime)
+#install.packages("multcomp")
+#install.packages("car")
 
-#setwd("~/Public")
-# read final data
-#dt <- read.csv('preclean.csv', stringsAsFactors = FALSE)
+library(ggplot2)
+library(data.table)
+library(dplyr)
+library(multcomp)
+library(car)
+
 dt <- fread('../../gen/analysis/temp/preclean.csv')
 ```
 
@@ -21,35 +22,28 @@ dt <- fread('../../gen/analysis/temp/preclean.csv')
 
 ```{r}
 dt$event <- as.factor(dt$event)
+dt$travisscott <- as.factor(dt$travisscott)
+dt$fortnite <- as.factor(dt$fortnite)
+dt$astronomical  <- as.factor(dt$astronomical)
 summary(dt)
 ```
-###Data selection
+### Data selection
 
 1. Due to the limitation of the sentiment analysis, only tweets in English are analyzed. 
 2. Retweets are excluded. 
-3. Since the text in this dataset come from Twitter, Valence Aware Dictionary for sEntiment Reasoner (VADER) is used to to classify the sentiments expressed in Twitter data. 
+3. Since the text in this dataset come from Twitter, Valence Aware Dictionary for sEntiment Reasoner (VADER) is used to to classify the sentiments expressed in Twitter data. The tweets with zero compound score are excluded. (could you think of any jusitifcation?)
 
 ```{r}
 dt_analysis <- dt %>%
   filter(language == "en") %>%
   filter(retweet == "FALSE") %>%
-  filter(compound != 0) %>%
-  mutate(sentiment = if_else(compound >= 0.05, "positive", "")) %>%
-  mutate(sentiment = if_else(compound <= -0.05, "negative", sentiment)) %>%
-  mutate(sentiment = if_else(compound > -0.05 & compound < 0.05, "neutral", sentiment)) %>%
-  mutate(sentiment = as.factor(sentiment))
+  filter(compound != 0)
 
 summary(dt_analysis)
 
 ```
-```{r}
-dt_valence <- dt_analysis %>%
-  group_by(event, sentiment) %>%
-  summarise(n = n()) %>%
-  mutate(rel.freq = n/sum(n)*100)
 
-dt_valence
-```
+
 
 ### Plots
 
@@ -68,7 +62,8 @@ lines(xfit, yfit, col="red", lwd=2)
 ```{r}  
 dt_summary <- dt_analysis %>%
   group_by(event) %>%
-  summarise(num_of_tweets = n(), avg_compound = mean(compound), SD = sd(compound),SE = sd(compound)/sqrt(length(compound)), max = max(compound), min = min(compound)) %>%
+  summarise(num_of_tweets = n(), avg_compound = mean(compound), SD = sd(compound),SE = sd(compound)/sqrt(length(compound)), 
+    max = max(compound), min = min(compound), .groups = 'drop') %>%
   arrange(event)
 dt_summary
 ```
@@ -81,19 +76,48 @@ ggplot(dt_summary, aes(x = event,y = avg_compound)) +
   geom_errorbar(aes(ymin=avg_compound-SE, ymax=avg_compound+SE),
                   width=.2,                    # Width of the error bars
                   position=position_dodge(.9)) +
-  ggtitle("Average compound score with standard error")
+  ggtitle("Average compound score with standard error") +
+  scale_y_continuous(name = "Compound Score") +
+  scale_x_discrete(name ="Event") +
+  theme_light()
 
 
 
 
+```
+
+### Travis Scott
+
+
+
+```{r}
+
+dt_travis <- dt_analysis %>%
+  group_by(travisscott) %>%
+  summarise(num_of_tweets = n(), avg_compound = mean(compound), SD = sd(compound),SE = sd(compound)/sqrt(length(compound)), 
+    max =  max(compound), min = min(compound), .groups = 'drop') %>%
+  arrange(travisscott)
+
+dt_travis 
 ```
 
 
 ```{r}
-# histograms
-#ggplot(dt_eng_nonzero, aes(x=compound, color=event)) +
-  #geom_histogram(fill="lightblue", alpha=0.5) + ggtitle('Count of sentiment score')
-#position="identity"
+ggplot(dt_travis, aes(x = travisscott,y = avg_compound)) + 
+  geom_bar(position=position_dodge(), stat="identity", fill="light green") +
+  geom_errorbar(aes(ymin=avg_compound-SE, ymax=avg_compound+SE),
+                  width=.2,                    # Width of the error bars
+                  position=position_dodge(.9)) +
+  ggtitle("Average compound score with standard error") +
+  scale_y_continuous(name = "Compound Score") +
+  scale_x_discrete(name ="Count of \"Travis Scott\" in a tweet") +
+  theme_light() 
+
+
 
 ```
+
+
+
+
 
