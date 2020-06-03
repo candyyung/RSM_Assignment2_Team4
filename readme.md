@@ -1,7 +1,10 @@
 - pip install -U vaderSentiment
 - pip install langdetect
 
+- R and the following packages:
 
+```
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2"))
 
 # Example of a reproducible research workflow: JSON parsing and text mining in Python, R + RMarkdown
 

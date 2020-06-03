@@ -6,9 +6,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-#install.packages("multcomp")
-#install.packages("car")
-
 library(ggplot2)
 library(data.table)
 library(dplyr)
