@@ -32,17 +32,12 @@ This respository consists of 2 parts:
 ```
 install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”))
 ```
-Fliptime package
-```
-require(devtools)
-install_github("Displayr/flipTime")
-```
-TDM package
+TDM and Fliptime packages
 ```
 install.packages("devtools")
 library(devtools)
 devtools::install_github("greenelab/TDM")
-library(TDM)
+devtools::install_github("Displayr/flipTime")
 ```
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
