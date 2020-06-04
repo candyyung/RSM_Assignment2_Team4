@@ -1,7 +1,5 @@
 library(data.table)
 library(dplyr)
-require(devtools)
-install_github("Displayr/flipTime")
 library(flipTime)
 
 dt <- fread('../../gen/data-preparation/output/dataset.csv')
