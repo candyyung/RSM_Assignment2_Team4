@@ -31,7 +31,7 @@ This respository consists of 2 parts:
 - R 3.6.3 and R studio and the following packages:
 
 ```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”))
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2","wordcloud","tm"))
 ```
 TDM and Fliptime packages
 ```
