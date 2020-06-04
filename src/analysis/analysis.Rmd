@@ -118,7 +118,7 @@ ggplot(dt_summary, aes(x = event,y = avg_compound)) +
                   position=position_dodge(.9)) +
   ggtitle("Average compound score with standard error") +
   scale_y_continuous(name = "Compound Score") +
-  scale_x_discrete(name ="Event") +
+  scale_x_continuous(name ="Event") +
   theme_light()
 
 
@@ -193,7 +193,7 @@ ggplot(dt_travis, aes(x = travisscott,y = avg_compound)) +
                   position=position_dodge(.9)) +
   ggtitle("Average compound score with standard error") +
   scale_y_continuous(name = "Compound Score") +
-  scale_x_discrete(name ="Count of \"Travis Scott\" in a tweet") +
+  scale_x_continuous("Count of \"Travis Scott\" in a tweet") +
   theme_light() 
 
 
