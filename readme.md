@@ -1,14 +1,7 @@
-- pip install -U vaderSentiment
-- pip install langdetect
+# Team Assignment 2: Building a Text Mining Pipeline - Team 4
+# A reproducible research workflow: JSON parsing and text mining in Python, R + RMarkdown
 
-- R and the following packages:
-
-```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2"))
-
-# Example of a reproducible research workflow: JSON parsing and text mining in Python, R + RMarkdown
-
-This is a basic example workflow using GNU Make, Python and R for a reproducible research workflow, following the principles of [tilburgsciencehub.com](http://tilburgsciencehub.com/workflow). Please use this template in combination with our tutorial at [http://tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial).
+This is a workflow using GNU Make, Python and R for a reproducible research workflow, following the principles of [tilburgsciencehub.com](http://tilburgsciencehub.com/workflow). 
 
 The main aim of this repository is to have a clean and basic structure, which can be easily adjusted to use in an actual project. In this example project, the following is done:
 - Pipeline stage "data-preparation"
@@ -23,6 +16,8 @@ The main aim of this repository is to have a clean and basic structure, which ca
 ## Dependencies
 - Python via the Anaconda distribution
 - TextBlob via `pip install -U textblob`
+- Vader Sentiment via `pip install -U vaderSentiment`
+- Langdetect via `pip install langdetect`
 - NLTK dictionaries; open Python, then type
   ```
   import nltk
@@ -33,17 +28,17 @@ The main aim of this repository is to have a clean and basic structure, which ca
 - R and the following packages:
 
 ```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2"))
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”,“tdm”)
+require(devtools)
+install_github("Displayr/flipTime")
 ```
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
 
 ## How to get started
-The best way to get started is by following [our tutorial](http://tilburgsciencehub.com/tutorial).
+The best way to get started is by following [the tutorial from our awesome lecturer](http://tilburgsciencehub.com/tutorial).
 
 - Download this repository (either by forking and then cloning, or as a template)
 - Open Terminal in project's main directory, type make
 - The src/data-preparation and src/analysis directories contain the specific workflow for each stage of the pipeline.
-- Tested on Mac and Windows 10
 
-- Many possible improvements remain. Comments and contributions are welcome!
