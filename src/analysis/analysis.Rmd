@@ -3,6 +3,14 @@ title: "Analysis"
 output: html_document
 ---
 
+<style>
+body {
+text-align: justify}
+</style>
+
+## Research in Social Media 2019/2020
+### Team Assignment 2: Building a Text Mining Pipeline - Team 4 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -11,24 +19,46 @@ library(data.table)
 library(dplyr)
 library(multcomp)
 library(car)
+library(tm)
+library(wordcloud)
+library(farver)
 
 dt <- fread('../../gen/analysis/temp/preclean.csv')
 ```
 
+### Research question
+
+What is the variation of sentiment across five sessions of a virtual music event in an online video game?
+
+### Motivation
+
+Due to the Coronavirus lockdown, people are limited to their home for receiving entertainment. Various organizations reacted to the consumers' need for home-entertainment by offering online music events, such as Fortnite’s Astronomical event featuring Travis Scott. Moreover, artists can use virtual events to their benefit, while real events are temporarily not possible. 
+
+Fortnite’s Astronomical event was one of a kind musical journey in which Travis Scott had a psychedelic display that occurred live in-game. To make sure everyone all over the world had a chance to experience the event, Fortnite came up with multiple ‘showtimes’ from April 24 to 26. Over 27.7 million unique players in-game participated live 45.8 million times across the five events, suggesting plenty of people saw multiple shows. Besides watching the event in-game, people of course had the option to watch the event on, for example, Youtube. Questions that, as a consequence, naturally arise are: How did people react to a unique event like this and how did their sentiment vary between the five different sessions? Little is known about the sentiment of consumers during online music events in the academic literature, while businesses today are heavily dependent on data. In addition, little is known about how the choice to show repetition influenced the sentiment people expressed. Therefore, it is academically relevant to study what the consumer’s sentiment is during multiple sessions of a virtual music event (in an online video game).
+
+
+### Data collection
+
+The raw dataset consists of 14493 tweets and retweets collected during the Travis Scott and Fortnite virtual event. The dataset is divided into 5 parts: each part represents the same event held at a different time to cover all the different time zones in the world. To every event are the following text mining metrics used: 
+  - Vader sentiments
+  - Polarity and Subjectivity
+  - Number of words per tweet
+  - The language of the tweet 
+  - Occurrences of the words travis-scott, fortnite and astronomical per tweet
+
+VADER sentiments are computed because they are specifically suitable for social media sentiment analysis (Hutto & Gilbert, 2014). VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool, which is part of the Jupyter Notebook. The number of words per tweet is added to measure a difference in intensity across the events. Furthermore, the top 100 most popular words are computed to give an overall idea of what people thought was important to share, or the overall opinion during the events. Finally, the language of the tweet is used to filter in. Namely, all the non-English tweets are filtered out, because their sentiment score is not a reliability measure. Even the translated version of their tweets did not give accurate results. Also, the retweets are filtered out of the parsed dataset, which resulted in a final dataset of 2842 tweets during 5 events. 
+
+
+
+### Analysis
+
+Before any formal analyses can take place, it was necessary to structure the unstructured data. The dataset already consisted of data retrieved during five different time slots on different days. Consequently, we added a column to the dataset that indicates to which event (time slot) the tweet belongs. In addition, we included the relevant tweet information, consisting of the tweet, the tweet_id, and the language of the tweet. The ‘nwords’ column refers to the number of words per tweet. The unit of analysis is the individual tweet, while the words in the tweet are the tokens of the document, which refers to the data processing step ‘Tokenization’ (Berger et al., 2020). Furthermore, we added the number of times one of the following terms was mentioned in the tweet: Travis Scott, Fortnite, astronomical. By removing the URLs (i.e. HTTP) cleaning has been done, while we also considered removing the stop words from the tweets. However, using a pre-compiled list of stopwords will negatively impact the performance of twitter sentiment classification methods, so we did not filter on stopwords.
+
+In total, our analysis consists of four different parts: summary statistics, investigation on the variation of sentiment across the five event, popular words among the tweets and investigation on the sentiment related to "Travis Scott" in the tweets.
+
 ### Summary statistics
 
-```{r}
-dt$event <- as.factor(dt$event)
-dt$travisscott <- as.factor(dt$travisscott)
-dt$fortnite <- as.factor(dt$fortnite)
-dt$astronomical  <- as.factor(dt$astronomical)
-summary(dt)
-```
-### Data selection
-
-1. Due to the limitation of the sentiment analysis, only tweets in English are analyzed. 
-2. Retweets are excluded. 
-3. Since the text in this dataset come from Twitter, Valence Aware Dictionary for sEntiment Reasoner (VADER) is used to to classify the sentiments expressed in Twitter data. The tweets with zero compound score are excluded. (could you think of any jusitifcation?)
+The summary statistics give a quick and simple description of the data in the dataset before data selection. For example, we can see the distribution of tweets across all the events. The first event was the so-called premiere and it is, therefore, logical that it generated the largest amount of tweets: 7188 from the original 14493. Furthermore, the count of the words ‘Travis Scott’, ‘Fortnite’, and ‘astronomical’ are indicated. The summary statistics of the tweets can be found below:
 
 ```{r}
 dt_analysis <- dt %>%
@@ -40,9 +70,7 @@ summary(dt_analysis)
 
 ```
 
-
-
-### Plots
+**Distribution of the tweets**
 
 ```{r}
 x <- dt_analysis$compound
@@ -55,6 +83,23 @@ lines(xfit, yfit, col="red", lwd=2)
 
 ```
 
+**Data selection**
+
+The data selection part provides the same output but after data selection. All non-English tweets are filtered out as well as all retweets. Besides, all tweets with a compound score of 0 are deleted. This results in a final dataset of 2842 tweets and again the distribution of tweets is given. VADER is used to classify the sentiments expressed in Twitter data. The following sentiment metrics are given: positive (pos), neutral (neu), negative(neg), and compound. The scores on the metrics positive, neutral, and negative represent the proportion of text that falls in these categories. The values of these three together should add up to 1. The compound score calculates the sum of all the lexicon ratings and varies between -1 and +1. The sentiment function of TextBlob returns two properties: polarity and subjectivity. Polarity is the sentiment itself, also rating from -1 to +1, while subjectivity is a measure of the sentiment being objective versus subjective (from 0 to 1).
+
+
+```{r}
+dt$event <- as.factor(dt$event)
+dt$travisscott <- as.factor(dt$travisscott)
+dt$fortnite <- as.factor(dt$fortnite)
+dt$astronomical  <- as.factor(dt$astronomical)
+summary(dt)
+```
+
+
+### Investigation on the variation of sentiment across the five events 
+
+This part consists of a histogram for tweets, a plot of the average compound score with standard error. The histogram for tweets is a graphical representation of the frequency distribution of the compound variable. The x-axis represents the compound score and the y-axis represents the frequency. From the data selection part, we could already obtain a compound average of 0.1585, which is higher than the compound threshold of 0.05 for a positive sentiment (Hutto & Gilbert, 2014). This histogram indeed shows higher frequencies for higher compound scores. The ‘average compound score with standard error’ presents the compound score per event. On the basis of average compound scores in the summary table, the fourth event has the highest compound (0.281). Besides, the plot shows higher compound scores for event 3 to 5 in comparison with event 1 and 2, since their standard deviation intervals do not touch. 
 
 ```{r}  
 dt_summary <- dt_analysis %>%
@@ -64,7 +109,6 @@ dt_summary <- dt_analysis %>%
   arrange(event)
 dt_summary
 ```
-
 
 
 ```{r}
@@ -83,8 +127,55 @@ ggplot(dt_summary, aes(x = event,y = avg_compound)) +
 
 ```
 
-### Travis Scott
+### Popular words among the tweets
 
+The word cloud represents the top 200 words that were used in all the events. This word cloud is created by first cleaning the tweets by making them uppercase, remove spaces, and remove URLs. Then we created a term-document frequency matrix of the tweets and sliced out the non-recognizable characters. Finally, the top frequent words are plotted into a word cloud. 
+
+
+```{r}
+# Build corpus
+corpus <- iconv(dt_analysis$text, to = "utf-8")
+corpus <- Corpus(VectorSource(corpus))
+
+```
+
+```{r}
+# clean tweets
+corpus <- tm_map(corpus, tolower)
+corpus <- tm_map(corpus, removePunctuation)
+corpus <- tm_map(corpus, removeNumbers)
+cleanset <- tm_map(corpus, removeWords, stopwords("english"))
+removeURL <- function(x) gsub("http[[:alnum:]]*", "", x)
+cleanset <- tm_map(cleanset, content_transformer(removeURL))
+cleanset <- tm_map(cleanset, stripWhitespace)
+
+```
+
+```{r}
+# Create term document matrix
+dtm <- TermDocumentMatrix(cleanset) 
+matrix <- as.matrix(dtm) 
+words <- sort(rowSums(matrix),decreasing=TRUE) 
+df <- data.frame(word = names(words),freq=words)
+
+frequent_words <- df %>% slice(1:200)
+
+# remove non-text characters
+f_w_clean <- frequent_words %>%
+  slice(-c(29,39,68,75,76,88,105,109,121,143,163,183))
+
+# Create a wordcloud
+library(wordcloud)
+
+set.seed(1234)
+wordcloud(words = f_w_clean$word, freq = f_w_clean$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.20, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+### Investigation on the sentiment related to "Travis Scott" in the tweets
+
+The last part of our analysis, ‘Investigation on the sentiment related to "Travis Scott" in the tweets’, consists of a plot with again the compound scores as a continuous variable on the y-axis, but now with the ‘count of Travis Scott in a tweet’ as a discrete variable on the x-as. Overall, the compound scores seem to be higher when ‘Travis Scott’ is not or less mentioned in a tweet, except for the 3 tweets in which the artist was mentioned 4 times. The compound is highest when ‘Travis Scott’ is not mentioned at all since the corresponding standard deviation interval does not overlap with the standard deviation interval of a count of 1 or 2 in a tweet.
 
 
 ```{r}
@@ -114,7 +205,27 @@ ggplot(dt_travis, aes(x = travisscott,y = avg_compound)) +
 
 ```
 
+Furthermore, we tried doing an Analysis of Variance (ANOVA) in order to see some statistically significant differences between the different events, but the assumptions of homogeneity of variance and homoscedasticity could not be met. As a consequence, doing a reliable ANOVA was unreasonable.
+
+### Conclusion
+
+At the beginning of this report, the following RQ was mentioned: ‘What is the variation of sentiment across five sessions of a virtual music event in an online video game?’. After data preparation and extensive analysis, we are now able to answer this question for Fortnite’s Astronomical event featuring Travis Scott. An event which in general goes together with a positive segment since the average compound of 0.1585 is higher than the compound threshold of 0.05 for a positive sentiment according to Hutto & Gilbert (2014). 
+
+People might expect otherwise, but the results of our analysis indicate that compound is higher for events which took place later in time and in different time-zones, and therefore geo locations (i.e. event 3, 4 and 5). Event 4 has the highest average compound, while the second event has the lowest average compound. It also turned out that the compound is highest for tweets in which ‘Travis Scott’ is not mentioned at all.
+
+Furthermore, the top 200 words used in the tweets during all events consist of quite a few superlatives (e.g. amazing, sick, insane, awesome), which gives an indication of a generally positive sentiment during the virtual events. 
+
+For artists, virtual music events are a good way of filling the gap of no-real concerts, because the overall sentiment of consumers is in general positive. From the organization's perspective, they should carefully select artists to perform during their live event. Namely, our results hinted that tweets without the name “Travis-Scott”  were scoring more positively on their sentiment than tweets with “Travis-Scott” in their name. Finally, online events can fill the entertainment needs for consumers (their reaction was, in general, more positive), and also give an opportunity to interact with each other on online platforms.
 
 
+
+### References
+
+Berger, J., Humphreys, A., Ludwig, S., Moe, W. W., Netzer, O., & Schweidel, D. A. (2020). 
+Uniting the tribes: Using text for marketing insight. Journal of Marketing, 84(1), 1-25.
+
+Hutto, C. J., & Gilbert, E. (2014, May). Vader: A parsimonious rule-based model for sentiment  
+analysis of social media text. In Eighth international AAAI conference on weblogs and 
+social media.
 
 
