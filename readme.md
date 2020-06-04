@@ -1,5 +1,5 @@
 # Team Assignment 2: Building a Text Mining Pipeline - Team 4
-# A reproducible research workflow: JSON parsing and text mining in Python, R + RMarkdown
+## A reproducible research workflow: JSON parsing and text mining in Python, R + RMarkdown
 
 This is a workflow using GNU Make, Python and R for a reproducible research workflow, following the principles of [tilburgsciencehub.com](http://tilburgsciencehub.com/workflow). 
 
