@@ -17,9 +17,10 @@ This respository consists of 2 parts:
 ## Dependencies
 
 - Python 3.7 
-- TextBlob via `pip install -U textblob`
-- Vader Sentiment via `pip install -U vaderSentiment`
+- TextBlob via `pip install textblob`
+- Vader Sentiment via `pip install vaderSentiment`
 - Langdetect via `pip install langdetect`
+- Pandas via `pip install pandas`
 - NLTK dictionaries; open Python, then type
   ```
   import nltk
