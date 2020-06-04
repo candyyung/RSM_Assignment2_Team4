@@ -30,7 +30,7 @@ This respository consists of 2 parts:
 - R 3.6.3 and the following packages:
 
 ```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”,“tdm”)
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”,“tdm”))
 require(devtools)
 install_github("Displayr/flipTime")
 ```
