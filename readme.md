@@ -36,6 +36,8 @@ install_github("Displayr/flipTime")
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
 
+The script has been run using Python 3.7 and R version 3.6.3 
+
 ## How to get started
 The best way to get started is by following [the tutorial from our awesome lecturer](http://tilburgsciencehub.com/tutorial).
 
