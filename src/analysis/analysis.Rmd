@@ -91,6 +91,7 @@ dt$event <- as.factor(dt$event)
 dt$travisscott <- as.factor(dt$travisscott)
 dt$fortnite <- as.factor(dt$fortnite)
 dt$astronomical  <- as.factor(dt$astronomical)
+dt_analysis$text <- sapply(dt_analysis$text,function(row) iconv(row, "latin1", "ASCII", sub=""))
 summary(dt)
 ```
 
@@ -158,15 +159,11 @@ df <- data.frame(word = names(words),freq=words)
 
 frequent_words <- df %>% slice(1:200)
 
-# remove non-text characters
-f_w_clean <- frequent_words %>%
-  slice(-c(29,39,68,75,76,88,105,109,121,143,163,183))
-
 # Create a wordcloud
 library(wordcloud)
 
 set.seed(1234)
-wordcloud(words = f_w_clean$word, freq = f_w_clean$freq, min.freq = 1,
+wordcloud(words = frequent_words$word, freq = frequent_words$freq, min.freq = 1,
           max.words=200, random.order=FALSE, rot.per=0.20, 
           colors=brewer.pal(8, "Dark2"))
 ```
