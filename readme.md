@@ -28,7 +28,7 @@ This respository consists of 2 parts:
   ```
   
 - Gnu Make
-- R 3.6.3 and the following packages:
+- R 3.6.3 and R studio and the following packages:
 
 ```
 install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”))
