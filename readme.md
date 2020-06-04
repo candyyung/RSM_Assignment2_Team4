@@ -30,9 +30,19 @@ This respository consists of 2 parts:
 - R 3.6.3 and the following packages:
 
 ```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”,“tdm”))
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”))
+```
+Fliptime package
+```
 require(devtools)
 install_github("Displayr/flipTime")
+```
+TDM package
+```
+install.packages("devtools")
+library(devtools)
+devtools::install_github("greenelab/TDM")
+library(TDM)
 ```
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
