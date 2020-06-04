@@ -15,7 +15,8 @@ This respository consists of 2 parts:
   - Produce RMarkdown HTML output with analysis report
   
 ## Dependencies
-- Python via the Anaconda distribution
+
+- Python 3.7 via the Anaconda distribution
 - TextBlob via `pip install -U textblob`
 - Vader Sentiment via `pip install -U vaderSentiment`
 - Langdetect via `pip install langdetect`
@@ -26,7 +27,7 @@ This respository consists of 2 parts:
   ```
   
 - Gnu Make
-- R and the following packages:
+- R 3.6.3 and the following packages:
 
 ```
 install.packages(c("stargazer", "knitr", "data.table", "ggplot2",“wordcloud”,“tdm”)
@@ -36,7 +37,7 @@ install_github("Displayr/flipTime")
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
 
-The script has been run using Python 3.7 and R version 3.6.3 
+
 
 ## How to get started
 The best way to get started is by following [the tutorial from our awesome lecturer](http://tilburgsciencehub.com/tutorial).
