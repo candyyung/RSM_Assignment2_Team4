@@ -26,19 +26,26 @@ This respository consists of 2 parts:
   import nltk
   nltk.download('punkt')
   ```
-  
 - Gnu Make
-- R 3.6.3 and R studio and the following packages:
-
+- R 3.6.3 
+- R Studio 1.2 (optional)
+- R packages
 ```
-install.packages(c("stargazer", "knitr", "data.table", "ggplot2","wordcloud","tm"))
+install.packages(c("stargazer", "knitr", "data.table", "ggplot2","devtools","wordcloud","tm"))
 ```
-TDM and Fliptime packages
+- R packages: TDM and Fliptime 
 ```
-install.packages("devtools")
 library(devtools)
 devtools::install_github("greenelab/TDM")
 devtools::install_github("Displayr/flipTime")
+```
+- R packages (optional if you don't have R Studio): rmarkdown 
+```
+install.packages(c("rmarkdown"))
+```
+- pandoc (optional if you don't have R Studio)
+```
+https://pandoc.org/installing.html
 ```
 
 Detailed installation instructions can be found here: [tilburgsciencehub.com/tutorial](http://tilburgsciencehub.com/tutorial)
