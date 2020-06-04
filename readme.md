@@ -29,19 +29,19 @@ This respository consists of 2 parts:
 - Gnu Make
 - R 3.6.3 
 - R Studio 1.2 (optional)
-- R packages
+- R packages: stargazer, knitr, data.table, ggplot2, devtools, wordcloud and tm
 ```
 install.packages(c("stargazer", "knitr", "data.table", "ggplot2","devtools","wordcloud","tm"))
 ```
-- R packages: TDM and Fliptime 
+- R packages: TDM and flipTime 
 ```
 library(devtools)
 devtools::install_github("greenelab/TDM")
 devtools::install_github("Displayr/flipTime")
 ```
-- R packages (optional if you don't have R Studio): rmarkdown 
+- R package (optional if you don't have R Studio): rmarkdown 
 ```
-install.packages(c("rmarkdown"))
+install.packages("rmarkdown")
 ```
 - pandoc (optional if you don't have R Studio)
 ```
