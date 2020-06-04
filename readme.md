@@ -16,7 +16,7 @@ This respository consists of 2 parts:
   
 ## Dependencies
 
-- Python 3.7 via the Anaconda distribution
+- Python 3.7 
 - TextBlob via `pip install -U textblob`
 - Vader Sentiment via `pip install -U vaderSentiment`
 - Langdetect via `pip install langdetect`
